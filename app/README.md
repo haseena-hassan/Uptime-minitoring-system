@@ -1,4 +1,4 @@
-### How it looks like on running index.js each time !! (sounds nice ryt ;) ?)
+### How it looks like on running index.js each time !! (sounds nice ryt ;) 
 
 
 #### Parsing the request path
@@ -26,10 +26,11 @@
 
     ##### [How to install or update postman on Linux](/postman.md)
 
-*   <img src="img/postman.png" 
+     <br>
+   <img src="img/postman.png" 
      alt="postman-app"
      style="float: left; margin-right: 10px;" />
-
+     <br>
     <img src="img/headers.png" 
      alt="postman-app"
      style="float: left; margin-right: 10px;" />
