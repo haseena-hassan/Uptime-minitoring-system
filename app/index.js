@@ -25,6 +25,9 @@ var server = http.createServer(function(request, response){
     var trimmedPath = path.replace(/^\/+|\/+$/g,'');    //string regex : trimming any extraneous '/' frm path
     
 
+    //Get query string as an object
+    var queryStringObject = parsedUrl.query;
+
     //Get http method
     var method = request.method.toLowerCase();
 
@@ -32,7 +35,8 @@ var server = http.createServer(function(request, response){
     response.end('Hello Worldd !\n');
 
     //Log what path the person was asking for
-    console.log('Request received at path : ' + trimmedPath + '\twith method : ' + method);
+    console.log('Request received at path : ' + trimmedPath + '\twith method : '
+                 + method + ' , with query string parameters as : ',queryStringObject);
 
 });
 
