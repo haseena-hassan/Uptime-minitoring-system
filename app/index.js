@@ -31,12 +31,17 @@ var server = http.createServer(function(request, response){
     //Get http method
     var method = request.method.toLowerCase();
 
+    //Get the the headers as object
+    var headers = request.headers;
+
     //send the response
     response.end('Hello Worldd !\n');
 
     //Log what path the person was asking for
-    console.log('Request received at path : ' + trimmedPath + '\twith method : '
-                 + method + ' , with query string parameters as : ',queryStringObject);
+    console.log('Request received at path : ' + trimmedPath);
+    console.log('\twith HTTP method : ' + method ) ;
+    console.log('\twith query string parameters as : ',queryStringObject);
+    console.log('\twith these headers : ',headers);
 
 });
 
