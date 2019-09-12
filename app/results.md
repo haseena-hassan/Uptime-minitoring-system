@@ -2,5 +2,6 @@
 
 
 #### Parsing the request path
-![](app/img/curl1.png)
-![](app/img/listen1.png)
+<img src="img/curl1.png"/>
+ 
+<img src="img/listen1.png"/>
