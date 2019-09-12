@@ -2,6 +2,10 @@
 
 
 #### Parsing the request path
-<img src="img/curl1.png"/>
+<img src="img/curl1.png" 
+     alt="Requesting"
+     style="float: left; margin-right: 10px;" />
  
-<img src="img/listen1.png"/>
+<img src="img/listen1.png"
+     alt="listening"
+     style="float: left; margin-right: 10px;" />
