@@ -67,20 +67,22 @@
     ```
 
     6. Save the file .
+    <br>
     <img src="img/nano-postman-desktop.png" 
      alt="postman-app"
      style="float: left; margin-right: 10px;" />
 
     7. Now, if you would search for Postman in unity or gnome, you can see the Postman app. 
-
+     <br>
     <img src="img/postman-app.png" 
      alt="postman-app"
      style="float: left; margin-right: 10px;" />
 
+     <br>
    <img src="img/postman.png" 
      alt="postman-app"
      style="float: left; margin-right: 10px;" />
-
+     <br>
     <img src="img/headers.png" 
      alt="postman-app"
      style="float: left; margin-right: 10px;" />
