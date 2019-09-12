@@ -24,11 +24,15 @@ var server = http.createServer(function(request, response){
     var path = parsedUrl.pathname;    //it is the untrimmed path that the user requests
     var trimmedPath = path.replace(/^\/+|\/+$/g,'');    //string regex : trimming any extraneous '/' frm path
     
+
+    //Get http method
+    var method = request.method.toLowerCase();
+
     //send the response
     response.end('Hello Worldd !\n');
 
     //Log what path the person was asking for
-    console.log('Request received at path : ' + trimmedPath);
+    console.log('Request received at path : ' + trimmedPath + '\twith method : ' + method);
 
 });
 
