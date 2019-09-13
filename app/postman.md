@@ -1,7 +1,9 @@
 ## How to install or update postman on Linux
 
-    ``` Postman Makes API Development Simple.```
-    This method is verified for Ubuntu, Debian, Fedora, OpenSuse.
+    ``` 
+    Postman Makes API Development Simple. This method is verified for Ubuntu, Debian, Fedora, OpenSuse.
+    ```
+    
 
     1. Go to the Postman app download [page](https://www.getpostman.com/apps) . Choose the os version from the drop-down. x64 for 64 bit Operating System and x84 for the 32 bit based Linux.
 
@@ -27,7 +29,8 @@
     ```
 
     5. Write the following in the file.
-   ```
+    
+    ```
     [Desktop Entry]
     Encoding=UTF-8
     Name=Postman
@@ -35,9 +38,11 @@
     Icon=/opt/Postman/app/resources/app/assets/icon.png
     Terminal=false
     Type=Application
-    Categories=Development;```
+    Categories=Development;
+    ```
 
     6. Save the file .
+    
     <img src="img/nano-postman-desktop.png" 
      alt="postman-app"
      style="float: left; margin-right: 10px;" />

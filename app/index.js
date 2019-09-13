@@ -6,6 +6,7 @@
  //Dependancies
  var http = require('http');
  var url = require('url');
+ var stringDecoder = require('string_decoder').StringDecoder;
 
 /*
     When we create the server and tell it to listen, when someone hits localhost:3000 the function gets called 
@@ -34,14 +35,33 @@ var server = http.createServer(function(request, response){
     //Get the the headers as object
     var headers = request.headers;
 
-    //send the response
-    response.end('Hello Worldd !\n');
+    //Get payloads, if any
+    var decoder = new stringDecoder('utf-8');       //telling it what encoding or charset it should decode
+    var buffer = '';                                //as new data comes we append it to buffer
+    
+    //as the data is streaming in,the request object emits 'data' event , when the request object emits or 'on' the event, data, we want a callback to be called and we want the data 
+    //that is being emitted to be passed to this callback within which we want our buffer to have the new data appended to it via a decoder
 
-    //Log what path the person was asking for
-    console.log('Request received at path : ' + trimmedPath);
-    console.log('\twith HTTP method : ' + method ) ;
-    console.log('\twith query string parameters as : ',queryStringObject);
-    console.log('\twith these headers : ',headers);
+    request.on('data', function(data){        //if there is no payload, buffer remain empty, ie data event never happens but still end event happens
+        buffer += decoder.write('data');
+    });
+
+    request.on('end', function(){           //end is another event which lets us know its done when its done and ends the buffer next we move the response and request log to the end event handler
+
+        buffer += decoder.end();            //cap off the buffer with whatever it ended with
+
+        //send the response
+        response.end('Hello Worldd !\n');
+
+        //Log what path the person was asking for
+        console.log('Request received at path : ' + trimmedPath);
+        console.log('Request received with HTTP method : ' + method ) ;
+        console.log('Request received with query string parameters as : ',queryStringObject);
+        console.log('Request received with these headers : ',headers);
+        console.log('Request received with these payloads : ',buffer);      //this is how streams are handled in node
+    });
+
+
 
 });
 
