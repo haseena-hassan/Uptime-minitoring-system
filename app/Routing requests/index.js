@@ -3,7 +3,7 @@
  *Date : 12/09/19
  */
 
- // Dependencies
+// Dependencies
 var http = require('http');
 var url = require('url');
 var StringDecoder = require('string_decoder').StringDecoder;
@@ -11,29 +11,32 @@ var StringDecoder = require('string_decoder').StringDecoder;
  // Configure the server to respond to all requests with a string
 var server = http.createServer(function(req,res){
 
-  // Parse the url
-  var parsedUrl = url.parse(req.url, true);
+    // Parse the url
+    var parsedUrl = url.parse(req.url, true);
 
-  // Get the path
-  var path = parsedUrl.pathname;
-  var trimmedPath = path.replace(/^\/+|\/+$/g, '');
+    // Get the path
+    var path = parsedUrl.pathname;
+    var trimmedPath = path.replace(/^\/+|\/+$/g, '');
 
-  // Get the query string as an object
-  var queryStringObject = parsedUrl.query;
+    // Get the query string as an object
+    var queryStringObject = parsedUrl.query;
 
-  // Get the HTTP method
-  var method = req.method.toLowerCase();
+    // Get the HTTP method
+    var method = req.method.toLowerCase();
 
-  //Get the headers as an object
-  var headers = req.headers;
+    //Get the headers as an object
+    var headers = req.headers;
 
-  // Get the payload,if any
-  var decoder = new StringDecoder('utf-8');
-  var buffer = '';
-  req.on('data', function(data) {
+    // Get the payload,if any
+    var decoder = new StringDecoder('utf-8');
+    var buffer = '';
+    
+    req.on('data', function(data) {
       buffer += decoder.write(data);
-  });
-  req.on('end', function() {
+    });
+    
+    req.on('end', function() {    //end is another event which lets us know its done when its done and ends the buffer next we move the response and request log to the end event handler
+      
       buffer += decoder.end();
 
       // Check the router for a matching path for a handler. If one is not found, use the notFound handler instead.
@@ -67,11 +70,11 @@ var server = http.createServer(function(req,res){
 
       });
 
+    });
   });
-});
 
 // Start the server
-server.listen(3000,function(){
+server.listen(2000,function(){
   console.log('The server is up and running now');
 });
 
@@ -80,7 +83,7 @@ var handlers = {};
 
 // Sample handler
 handlers.sample = function(data,callback){
-    callback(406,{'name':'sample handler'});
+    callback(406, {'name':'sample handler'});
 };
 
 // Not found handler
