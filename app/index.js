@@ -10,6 +10,33 @@ var url = require('url');
 var StringDecoder = require('string_decoder').StringDecoder;
 var config = require('./config');
 var fs = require('fs');
+var _data = require('./lib/data');
+
+
+
+
+//TESTING
+// @TODO delete this
+_data.create('test','newFile', {'foo' : 'bar'}, function(err){
+  console.log('This is the err called back : ',err);
+});
+
+_data.read('test','newFile', function(err,data){
+  console.log('This is the err called back : ',err, ' and this is the data read : ',data);
+});
+
+_data.update('test', 'newFile', {'fizz':'buzz'}, function(err){
+  console.log('This is the err called back : ',err);
+});
+
+_data.delete('test', 'newFile', function(err){
+  console.log('This is the err called back : ',err);
+});
+
+
+
+
+
 
 
  // Instantiate the HTTP server
@@ -106,9 +133,9 @@ var unifiedServer = function(req,res){
 // Define all the handlers
 var handlers = {};
 
-// Sample handler
-handlers.sample = function(data,callback){
-    callback(406,{'name':'sample handler'});
+// Ping handler
+handlers.ping = function(data,callback){
+    callback(200);
 };
 
 // Not found handler
@@ -118,5 +145,5 @@ handlers.notFound = function(data,callback){
 
 // Define the request router
 var router = {
-  'sample' : handlers.sample
+  'ping' : handlers.ping
 };
