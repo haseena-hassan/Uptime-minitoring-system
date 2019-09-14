@@ -4,17 +4,19 @@ var environments = {};
 
 //Staging (default) env
 environments.staging = {
-    'port' : '3000',
+    'httpPort' : '3000',
+    'httpsPort' : '3001',
     'envName' : 'staging'
 };
 
 //Production env
 environments.production = {
-    'port' : '5000',
+    'httpPort' : '5000',
+    'httpsPort' : '5001',
     'envName' : 'production'
 }
 
-//determine whicch env was passed as cli argument
+//determine which env was passed as cli argument
 var currentEnvironment = typeof(process.env.NODE_ENV) == 'string' ? process.env.NODE_ENV.toLowerCase() : '';
 
 //if env specified in cli defined as an object then pass it, else make staging the default env
