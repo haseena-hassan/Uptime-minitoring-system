@@ -3,6 +3,7 @@
 //Dependancies
 var fs = require('fs');
 var path = require('path');     //te normalise the paths btw diff directories
+var helpers = require('./helpers');
 
 //Create container for this module (to be exported)
 var lib = {};
@@ -56,8 +57,12 @@ lib.read = function(dir, file, callback){
     var fileToRead = lib.baseDir + dir + '/' + file + '.json';
     
     fs.readFile(fileToRead, 'utf8', function(err,data){     //read file
-        
-        callback(err,data);
+        if(!err && data){
+            var parsedData = helpers.parseJsonToObject(data);
+            callback(false, parsedData);
+        }else{
+            callback(err,data);
+        }
     });
 };
 
