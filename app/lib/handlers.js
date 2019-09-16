@@ -7,6 +7,8 @@
  var _data = require('./data');
  var helpers = require('./helpers');
 
+
+
  // Define all the handlers
 var handlers = {};
 
@@ -224,6 +226,189 @@ handlers._users.delete = function(data, callback){
         callback(400, {'Error' : 'Missing required field'});
     }
 };
+
+
+
+
+
+
+
+//Tokens handler
+handlers.tokens = function(data, callback){
+    var acceptableMethods = ['post', 'get', 'put', 'delete'];        //this method actually figure out which method u r requesting,acceptable methods and pass it along some sub handlers
+    if(acceptableMethods.indexOf(data.method) > -1) {                //if data method exists within the acceptable methods array
+        handlers._tokens[data.method](data, callback);               //pass to the subhandler for that specific request method, _user private handler named so by convention(yet need to define)
+    }   
+    else{
+        callback(405);      //http status code for method not found
+    }
+};
+
+
+//Containers for all the tokens method
+handlers._tokens = {};
+
+//Tokens - post
+//Required data : phone, password :creating token requires initial auth, later token can be used
+//Optional data : none
+handlers._tokens.post = function(data, callback){
+
+    var phone = typeof(data.payload.phone) == 'string' && data.payload.phone.trim().length == 10 ? data.payload.phone.trim() : false;
+    var password = typeof(data.payload.password) == 'string' && data.payload.password.trim().length > 0 ? data.payload.password.trim() : false;
+    if(phone && password){
+
+        //Lookup the user who matches the phone number
+        _data.read('users', phone, function(err, userData){
+
+            if(!err && userData){
+
+                //Check the password send against the hashed password, so first we need to hash the obtained password
+                var hashedPassword = helpers.hash(password);
+                if(hashedPassword == userData['password']){
+
+                    //if valid create a new token with a random name, set the expiration date 1 hour in future
+                    var tokenId = helpers.createRandomString(20);
+                    var expires = Date.now() + 1000*60*60 ;
+
+                    var tokenObject = {
+                        'phone' : phone,
+                        'tokenId' : tokenId,
+                        'expires' : expires
+                    }
+
+                    //Store the token
+                    _data.create('tokens', tokenId, tokenObject, function(err){
+                        if(!err){
+                            callback(200, tokenObject);
+                        }
+                        else{
+                            callback(500, {'Error' : 'Could not create the new token'});
+                        }
+                    });
+                }
+                else{
+                    callback(400, {'Error' : 'Password didnt match the specified user\'s stored password'});
+                }
+            }
+            else{
+                callback(400, {'Error' : 'Could not find the specified user'});
+            }
+        });
+    }
+    else{
+        callback(400, {'Error' : 'Missing required fields'});
+    }
+};
+
+//Tokens - get
+//Required data: id
+//Optional data: none
+handlers._tokens.get = function(data, callback){
+
+    //Check whether the id is valid
+    var id  = typeof(data.queryStringObject.id) == 'string' && data.queryStringObject.id.trim().length == 20 ? data.queryStringObject.id.trim() : false;
+    if(id){
+
+        //lookup the token
+        _data.read('tokens', id, function(err, tokenData){
+            if(!err && tokenData){
+
+                callback(200, tokenData);
+            }
+            else{
+                callback(404);  //not found status
+            }
+        });
+    }
+    else{
+        callback(400, {'Error' : 'Missing required field'});
+    }
+};
+
+//Tokens - put
+//Required data : id, extends
+//Optional data : none
+handlers._tokens.put = function(data, callback){
+
+    //Check whether id is valid and extend request is true
+    var id  = typeof(data.payload.id) == 'string' && data.payload.id.trim().length == 20 ? data.payload.id.trim() : false;
+    var extend  = typeof(data.payload.extend) == 'boolean' && data.payload.extend == true ? true : false;
+    if(id && extend){
+
+        //Look up the token
+        _data.read('tokens', id, function(err, tokenData){
+
+            if(!err && tokenData){
+
+                //Check to make sure that the token isn't expired
+                if(tokenData['expires'] > Date.now()){
+
+                    //Set the expiration an hour from now
+                    tokenData['expires'] = Date.now() + 1000*60*60;
+
+                    //Store the updated expiry time
+                    _data.update('tokens', id, tokenData, function(err){
+                        if(!err){
+                            callback(200);
+                        }
+                        else{
+                            callback(500, {'Error' : 'Could not update the token\'s expiration'});
+                        }
+                    });
+                }
+                else{
+                    callback(400, {'Error' : 'Token had already expired and cannot be extended'});
+                }
+            }
+            else{
+                callback(400, {'Error' : 'Specified token didnt exist'});
+            }
+        });
+    }
+    else{
+        callback(400, {'Error' : 'Missing required field(s) or field(s) are invalid'});
+    }
+};
+
+//Tokens - delete (deleting a token is logging out basically)
+//Required data: id
+//Optional data : none
+handlers._tokens.delete = function(data, callback){
+
+    //Check whether the id is valid
+    var id  = typeof(data.queryStringObject.id) == 'string' && data.queryStringObject.id.trim().length == 20 ? data.queryStringObject.id.trim() : false;
+    if(id){
+
+        //lookup the token
+        _data.read('tokens', id, function(err, data){
+            if(!err && data){
+
+                //Deleting the data from the user collection
+                _data.delete('tokens', id, function(err){
+
+                    if(!err){
+                        callback(200);
+                    }
+                    else{
+                        callback(500, {'Error' : 'Could not delete the specified token'});
+                    }
+                });
+            }
+            else{
+                callback(400, {'Error' : 'Could not find the specified token'});  //not found status
+            }
+        });
+    }
+    else{
+        callback(400, {'Error' : 'Missing required field'});
+    }
+};
+
+
+
+
+
+
 
 // Ping handler
 handlers.ping = function(data,callback){
